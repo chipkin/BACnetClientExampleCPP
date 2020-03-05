@@ -1,6 +1,6 @@
 # The Compiler: gcc for C, g++ for C++
 CC := g++
-NAME := BACnetServerExampleCPP_linux_x64_Release
+NAME := BACnetClientExampleCPP_linux_x64_Release
 
 # Compiler flags:
 # -m32 for 32bit, -m64 for 64bit
@@ -13,9 +13,9 @@ RELEASEFLAGS = -O3 -DCAS_BACNET_STACK_LIB_TYPE_LIB
 OBJECTFLAGS = -c -fmessage-length=0 -fPIC -MMD -MP
 LDFLAGS = -static
 
-SOURCES = $(wildcard BACnetServerExample/*.cpp) $(wildcard submodules/cas-bacnet-stack/adapters/cpp/*.cpp)  $(wildcard submodules/cas-bacnet-stack/submodules/cas-common/source/*.cpp) 
+SOURCES = $(wildcard BACnetClientExample/*.cpp) $(wildcard submodules/cas-bacnet-stack/adapters/cpp/*.cpp)  $(wildcard submodules/cas-bacnet-stack/submodules/cas-common/source/*.cpp) 
 OBJECTS = $(addprefix obj/,$(notdir $(SOURCES:.cpp=.o)))
-INCLUDES = -IBACnetServerExample -Isubmodules/cas-bacnet-stack/adapters/cpp -Isubmodules/cas-bacnet-stack/source -Isubmodules/cas-bacnet-stack/submodules/cas-common/source
+INCLUDES = -IBACnetClientExample -Isubmodules/cas-bacnet-stack/adapters/cpp -Isubmodules/cas-bacnet-stack/source -Isubmodules/cas-bacnet-stack/submodules/cas-common/source
 LIBPATH = -Lbin 
 LIB = -ldl -lCASBACnetStack_x64_Release 
 
@@ -30,7 +30,7 @@ $(NAME): $(OBJECTS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-obj/%.o: BACnetServerExample/%.cpp
+obj/%.o: BACnetClientExample/%.cpp
 	@mkdir -p obj
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
