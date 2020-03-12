@@ -79,9 +79,9 @@ public:
 	//static const uint16_t OBJECT_TYPE_LIGHTING_OUTPUT = 54;
 	//static const uint16_t OBJECT_TYPE_BINARY_LIGHTING_OUTPUT = 55;
 	static const uint16_t OBJECT_TYPE_NETWORK_PORT = 56;
-	//static const uint16_t OBJECT_TYPE_ELEVATOR_GROUP = 57;
-	//static const uint16_t OBJECT_TYPE_ESCALATOR = 58;
-	//static const uint16_t OBJECT_TYPE_LIFT = 59;
+	static const uint16_t OBJECT_TYPE_ELEVATOR_GROUP = 57;
+	static const uint16_t OBJECT_TYPE_ESCALATOR = 58;
+	static const uint16_t OBJECT_TYPE_LIFT = 59;
 
 	// Property Identifiers
 	static const uint32_t PROPERTY_IDENTIFIER_ALL = 8;

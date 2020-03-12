@@ -50,16 +50,20 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.1";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.2";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
 // =======================================
 const uint16_t SETTING_BACNET_IP_PORT = 47808; 
 const uint32_t SETTING_CLIENT_DEVICE_INSTANCE = 389002; 
-const char SETTING_DOWNSTREAM_DEVICE_IP_ADDRESS[] = "192.168.1.126";
-const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = 47808; 
+const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
+const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.1.126";
+
+// 
+// =======================================
+std::string downstream_Device_ip_address;
 
 
 // Callback Functions to Register to the DLL
@@ -108,11 +112,23 @@ void ExampleWhoIs();
 void ExampleReadProperty(); 
 void ExampleWriteProperty();
 
-int main()
+int main(int argc, char ** argv )
 {
 	// Print the application version information 
 	std::cout << "CAS BACnet Stack Server Example v" << APPLICATION_VERSION << "." << CIBUILDNUMBER << std::endl;
 	std::cout << "https://github.com/chipkin/BACnetServerExampleCPP" << std::endl << std::endl;
+
+
+	// Load the arguments. 
+	downstream_Device_ip_address = SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS; 
+	if (argc >= 2) {
+		downstream_Device_ip_address = argv[1];
+		std::cout << "FYI: Using " << downstream_Device_ip_address << " for the downstream device IP address" << std::endl;
+	}
+
+	
+
+
 
 	// 1. Load the CAS BACnet stack functions
 	// ---------------------------------------------------------------------------
@@ -197,7 +213,7 @@ int main()
 	// 
 	// 5. Convert the IP Address and Port to a connection string
 	std::cout << "Generated the connection string for the downstream device. " << std::endl ;
-	if (!ChipkinCommon::ChipkinConvert::IPAddressToBytes(SETTING_DOWNSTREAM_DEVICE_IP_ADDRESS, downstreamConnectionString, 6)) {
+	if (!ChipkinCommon::ChipkinConvert::IPAddressToBytes(downstream_Device_ip_address.c_str(), downstreamConnectionString, 6)) {
 		std::cerr << "Failed to convert the ip address to a connection string" << std::endl ;
 		return -4;
 	}
@@ -260,7 +276,9 @@ bool DoUserInput()
 			std::cout << std::endl << std::endl;
 			// Print the application version information 
 			std::cout << "CAS BACnet Stack Client Example v" << APPLICATION_VERSION << "." << CIBUILDNUMBER << std::endl;
-			std::cout << "https://github.com/chipkin/BACnetClientExampleCPP" << std::endl << std::endl;
+			std::cout << "https://github.com/chipkin/BACnetClientExampleCPP" << std::endl;
+			std::cout << "Usage: BACnetClient {IPAddress}" << std::endl; 
+			std::cout << "Example: BACnetClient 192.168.1.126" << std::endl << std::endl;
 
 			std::cout << "Help: " << std::endl;
 			std::cout << "- Q - Quit" << std::endl;
@@ -314,9 +332,49 @@ void ExampleReadProperty() {
 	// Send the message
 	std::cout << "Sending Read Property. DeviceID=["<< SETTING_DOWNSTREAM_DEVICE_INSTANCE <<"], property=["<< CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_ALL <<"], timeout=[3]..." << std::endl;
 
-	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE, SETTING_DOWNSTREAM_DEVICE_INSTANCE, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_ALL, false, 0);
-	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
+	// Get the object names. All objects have object names. 
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT, 0, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_OUTPUT, 1, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_INPUT, 3, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_OUTPUT, 4, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_VALUE, 5, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE, 8, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_INPUT, 13, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_OUTPUT, 14, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_VALUE, 19, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_TREND_LOG, 20, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BITSTRING_VALUE, 39, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_CHARACTERSTRING_VALUE, 40, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DATE_VALUE, 42, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_INTEGER_VALUE, 45, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_LARGE_ANALOG_VALUE, 46, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_OCTETSTRING_VALUE, 47, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_POSITIVE_INTEGER_VALUE, 48, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_TIME_VALUE, 50, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_NETWORK_PORT, 56, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 
+	// Get the present value from objects that have a present value property. 
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT, 0, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_OUTPUT, 1, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_INPUT, 3, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_OUTPUT, 4, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_VALUE, 5, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_INPUT, 13, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_OUTPUT, 14, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_VALUE, 19, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BITSTRING_VALUE, 39, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_CHARACTERSTRING_VALUE, 40, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DATE_VALUE, 42, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_INTEGER_VALUE, 45, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_LARGE_ANALOG_VALUE, 46, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_OCTETSTRING_VALUE, 47, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_POSITIVE_INTEGER_VALUE, 48, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_TIME_VALUE, 50, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
+	
+	// send the Read property message. 
+	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
 	WaitForResponse();
 }
 
@@ -465,9 +523,192 @@ void HelperPrintCommonHookParameters(const uint8_t* connectionString, const uint
 	std::cout << "connectionString=[" << (int)connectionString[0] << "." << (int)connectionString[1] << "." << (int)connectionString[2] << "." << (int)connectionString[3] << ":" << ((connectionString[4] * 256) + connectionString[5]) << "], "; 
 }
 void HelperPrintCommonHookPropertyParameters(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex) {
-	std::cout << "InvokeID=[" << (int)originalInvokeId << "], service=[" << (int)service << "], objectType=[" << objectType << "], objectInstance=[" << objectInstance
-		<< "], propertyIdentifier=[" << propertyIdentifier << "], ";
-
+	std::cout << "InvokeID=[" << (int)originalInvokeId << "], service=[" << (int)service << "], objectInstance = [" << objectInstance << "], ";
+	
+	// Decode some of the objectType for readablity. 
+	std::cout << "objectType=[";
+	switch (objectType) {
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT: {
+			std::cout << "analog_input(" << CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_OUTPUT: {
+			std::cout << "analog_output(" << CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_OUTPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE: {
+			std::cout << "analog_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_INPUT: {
+			std::cout << "binary_input(" << CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_INPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_OUTPUT: {
+			std::cout << "binary_output(" << CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_OUTPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_VALUE: {
+			std::cout << "binary_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE: {
+			std::cout << "device(" << CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_INPUT: {
+			std::cout << "multi_state_input(" << CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_INPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_OUTPUT: {
+			std::cout << "multi_state_output(" << CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_OUTPUT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_VALUE: {
+			std::cout << "multi_state_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_TREND_LOG: {
+			std::cout << "trend_log(" << CASBACnetStackExampleConstants::OBJECT_TYPE_TREND_LOG << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_BITSTRING_VALUE: {
+			std::cout << "bitstring_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_BITSTRING_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_CHARACTERSTRING_VALUE: {
+			std::cout << "characterstring_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_CHARACTERSTRING_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_DATE_VALUE: {
+			std::cout << "date_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_DATE_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_INTEGER_VALUE: {
+			std::cout << "integer_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_INTEGER_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_LARGE_ANALOG_VALUE: {
+			std::cout << "large_analog_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_LARGE_ANALOG_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_OCTETSTRING_VALUE: {
+			std::cout << "octetstring_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_OCTETSTRING_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_POSITIVE_INTEGER_VALUE: {
+			std::cout << "positive_integer_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_POSITIVE_INTEGER_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_TIME_VALUE: {
+			std::cout << "time_value(" << CASBACnetStackExampleConstants::OBJECT_TYPE_TIME_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_NETWORK_PORT: {
+			std::cout << "network_port(" << CASBACnetStackExampleConstants::OBJECT_TYPE_NETWORK_PORT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_ELEVATOR_GROUP: {
+			std::cout << "elevator_group(" << CASBACnetStackExampleConstants::OBJECT_TYPE_ELEVATOR_GROUP << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_ESCALATOR: {
+			std::cout << "escalator(" << CASBACnetStackExampleConstants::OBJECT_TYPE_ESCALATOR << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::OBJECT_TYPE_LIFT: {
+			std::cout << "lift(" << CASBACnetStackExampleConstants::OBJECT_TYPE_LIFT << ")";
+			break;
+		}
+		default: {
+			std::cout << (int) objectType; 
+			break; 
+		}
+	}
+	std::cout << "], ";
+	
+	// Decode some of the propertyIdentifier for readablity. 
+	std::cout << "propertyIdentifier=[";
+	switch(propertyIdentifier) {
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_ALL: {
+			std::cout << "all(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_ALL << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_COV_INCURMENT: {
+			std::cout << "cov_incurment(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_COV_INCURMENT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_DAY_LIGHT_SAVINGS_STATUS: {
+			std::cout << "day_light_savings_status(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_DAY_LIGHT_SAVINGS_STATUS << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_DESCRIPTION: {
+			std::cout << "description(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_DESCRIPTION << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_LOCAL_DATE: {
+			std::cout << "local_date(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_LOCAL_DATE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_LOCAL_TIME: {
+			std::cout << "local_time(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_LOCAL_TIME << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_NUMBER_OF_STATES: {
+			std::cout << "number_of_states(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_NUMBER_OF_STATES << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME: {
+			std::cout << "object_name(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE: {
+			std::cout << "present_value(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRIORITY_ARRAY: {
+			std::cout << "priority_array(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRIORITY_ARRAY << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_RELIABILITY: {
+			std::cout << "reliability(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_RELIABILITY << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_STATE_TEXT: {
+			std::cout << "state_text(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_STATE_TEXT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_STATUS_FLAGS: {
+			std::cout << "status_flags(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_STATUS_FLAGS << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_SYSTEM_STATUS: {
+			std::cout << "system_status(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_SYSTEM_STATUS << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_UTC_OFFSET: {
+			std::cout << "utc_offset(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_UTC_OFFSET << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_BIT_TEXT: {
+			std::cout << "bit_text(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_BIT_TEXT << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_MAX_PRES_VALUE: {
+			std::cout << "max_pres_value(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_MAX_PRES_VALUE << ")";
+			break;
+		}
+		case CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_MIN_PRES_VALUE: {
+			std::cout << "min_pres_value(" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_MIN_PRES_VALUE << ")";
+			break;
+		}
+		default: 
+			std::cout << propertyIdentifier ;
+			break; 
+	}
+	std::cout << "], ";
+	
+	// If usePropertyArrayIndex is true then show the propertyArrayIndex
 	if (usePropertyArrayIndex) {
 		std::cout << "propertyArrayIndex=[" << propertyArrayIndex << "], ";
 	}
@@ -493,6 +734,7 @@ void HookIHave(const uint32_t deviceIdentifier, const uint16_t objectType, const
 void HookError(const uint8_t originalInvokeId, const uint32_t errorChoice, const uint32_t errorClass, const uint32_t errorCode, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength, const bool useObjectProperty, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier) {
 
 	std::cout << "HookError. originalInvokeId=[" << (int) originalInvokeId << "], errorChoice=[" << (int)errorChoice << "], errorClass=[" << (int)errorClass << "], errorCode=[" << (int)errorCode << "], ";
+	std::cout << "useObjectProperty=[" << (int)useObjectProperty << "], objectType=[" << (int)objectType << "], objectInstance=[" << (int)objectInstance << "], propertyIdentifier=[" << (int)propertyIdentifier << "], ";
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
@@ -527,55 +769,56 @@ void HookTimeout(const uint8_t originalInvokeId, const uint8_t* connectionString
 
 void HookPropertyBitString(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const bool* value, const uint32_t length, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
 	std::cout << "HookPropertyBitString. ";
+	// ToDo: Encode bitstring as 'T' and 'F' 
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyBool(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const bool value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyBool. ";
+	std::cout << "HookPropertyBool. value=[" << value << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyCharString(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const char* value, const uint32_t length, const uint8_t encoding, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyCharString. ";
+	std::cout << "HookPropertyCharString. value=[" << value << "], length=[" << length <<"], encoding=[" << (int) encoding << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyDate(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint8_t year, const uint8_t month, const uint8_t day, const uint8_t weekday, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyDate. ";
+	std::cout << "HookPropertyDate. year=[" << (int) year << "], month=[" << (int) month << "], day=[" << (int) day << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyDouble(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const double value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyDouble. ";
+	std::cout << "HookPropertyDouble. value=[" << value << "], "; 
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyEnum(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint32_t value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyEnum. ";
+	std::cout << "HookPropertyEnum. value=[" << value << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyNull(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyNull. ";
+	std::cout << "HookPropertyNull. value=[null], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyObjectIdentifier(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint16_t objectTypeValue, const uint32_t objectInstanceValue, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyObjectIdentifier. ";
+	std::cout << "HookPropertyObjectIdentifier. objectInstanceValue=[" << objectInstanceValue << "], objectTypeValue=[" << objectTypeValue << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
@@ -583,34 +826,35 @@ void HookPropertyObjectIdentifier(const uint32_t originalInvokeId, const uint8_t
 
 void HookPropertyOctString(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint8_t* value, const uint32_t length, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
 	std::cout << "HookPropertyOctString. ";
+	// ToDo: Encode Oct string as Hex 
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyInt(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const int32_t value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyInt. ";
+	std::cout << "HookPropertyInt. value=[" << value << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyReal(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const float value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyReal. ";
+	std::cout << "HookPropertyReal. value=[" << value << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyTime(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint8_t hour, const uint8_t minute, const uint8_t second, const uint8_t hundrethSecond, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyTime. ";
+	std::cout << "HookPropertyTime. hour=[" << (int) hour << "], minute=[" << (int)minute << "], second=[" << (int)second << "], hundrethSecond=[" << (int)hundrethSecond << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
 
 void HookPropertyUInt(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint32_t value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
-	std::cout << "HookPropertyUInt. ";
+	std::cout << "HookPropertyUInt. value=[" << value << "], ";
 	HelperPrintCommonHookPropertyParameters(originalInvokeId, service, objectType, objectInstance, propertyIdentifier, usePropertyArrayIndex, propertyArrayIndex);
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
