@@ -1,6 +1,30 @@
-# BACnet Client Example CPP
+# BACnet Client Example C++
 
-A basic BACnet IP client example written with C++ using the [CAS BACnet Stack](https://www.bacnetstack.com/). This client example is ment to be used with the [BACnet IP server example](https://github.com/chipkin/BACnetServerExampleCPP) and expects a device with the following objects.
+A basic BACnet IP client example written in C++ using the [CAS BACnet Stack](https://store.chipkin.com/services/stacks/bacnet-stack). This client example is meant to be used with the [BACnet IP server example](https://github.com/chipkin/BACnetServerExampleCPP). Supports WhoIs, Read property, and Write property services.
+
+## Releases
+
+Build versions of this example can be downloaded from the releases page:
+
+[https://github.com/chipkin/BACnetClientExampleCPP/releases](https://github.com/chipkin/BACnetClientExampleCPP/releases)
+
+## Installation
+
+Download the latest release zip file on the releases page.
+
+## Usage
+
+```txt
+Usage: BACnetClient {IPAddress}
+Example: BACnetClient 192.168.1.126
+
+Help:
+- Q - Quit
+- W - Send WhoIs message
+- R - Send Read property messages
+- U - Send Write property messages
+```
+Client expects a device with the following objects:
 
 - Device: 389999 (Device Rainbow)
   - analog_input: 0            (AnalogInput Bronze)
@@ -23,27 +47,23 @@ A basic BACnet IP client example written with C++ using the [CAS BACnet Stack](h
   - time_value: 50             (TimeValue Turquoise)
   - NetworkPort: 56            (NetworkPort Umber)
 
-## Usage
+## Build
 
+A [Visual studio 2019](https://visualstudio.microsoft.com/downloads/) project is included with this project. This project also auto built using [Gitlab CI](https://docs.gitlab.com/ee/ci/) on every commit.
+
+The CAS BACnet Stack submodule is required for compilation.
+
+## Example Output
 ```txt
-Usage: BACnetClient {IPAddress}
-Example: BACnetClient 192.168.1.126
+CAS BACnet Stack Server Example v0.0.2.0
+https://github.com/chipkin/BACnetServerExampleCPP
 
-Help:
-- Q - Quit
-- W - Send WhoIs message
-- R - Send Read property messages
-- U - Send Write property messages
+FYI: Loading CAS BACnet Stack functions... OK
+FYI: CAS BACnet Stack version: 3.16.0.0
+FYI: Connecting UDP Resource to port=[47808]... OK, Connected to port
+FYI: Registering the callback Functions with the CAS BACnet Stack
+Setting up client device. device.instance=[389002]
+Created Device.
+Generated the connection string for the downstream device.
+FYI: Entering main loop...
 ```
-
-## Building
-
-A [Visual studio 2019](https://visualstudio.microsoft.com/downloads/) project is included with this project.
-
-This project also auto built using [Gitlab CI](https://docs.gitlab.com/ee/ci/) on every commit.
-
-## Releases
-
-Build versions of this example can be downloaded from the releases page:
-
-[https://github.com/chipkin/BACnetClientExampleCPP/releases](https://github.com/chipkin/BACnetClientExampleCPP/releases)

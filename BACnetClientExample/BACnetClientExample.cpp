@@ -1,5 +1,16 @@
-// BACnetClientExample.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/*
+ * BACnet Client Example C++
+ * ----------------------------------------------------------------------------
+ * BACnetClientExample.cpp
+ * 
+ * A basic BACnet IP client example written with C++ using the CAS BACnet Stack.
+ *
+ * More information https://github.com/chipkin/BACnetClientExampleCPP
+ * 
+ * This file contains the 'main' function. Program execution begins and ends there.
+ * 
+ * Created by: Steven Smethurst
+*/
 
 #include <iostream>
 
@@ -61,7 +72,7 @@ const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
 const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.1.126";
 
-// 
+// Downstream IP Initialization
 // =======================================
 std::string downstream_Device_ip_address;
 
@@ -75,7 +86,7 @@ uint16_t CallbackSendMessage(const uint8_t* message, const uint16_t messageLengt
 time_t CallbackGetSystemTime();
 
 
-// Hooks for unconfirmed request
+// Hooks for unconfirmed requests
 void HookIAm(const uint32_t deviceIdentifier, const uint32_t maxApduLengthAccepted, const uint8_t segmentationSupported, const uint16_t vendorIdentifier, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength);
 void HookIHave(const uint32_t deviceIdentifier, const uint16_t objectType, const uint32_t objectInstance, const char* objectName, const uint32_t objectNameLength, const uint8_t objectNameEncoding, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength);
 
@@ -107,7 +118,7 @@ void WaitForResponse(unsigned int timeout=3);
 void HelperPrintCommonHookParameters(const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength);
 void HelperPrintCommonHookPropertyParameters(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex);
 
-// 
+// Example Services
 void ExampleWhoIs();
 void ExampleReadProperty(); 
 void ExampleWriteProperty();
@@ -119,15 +130,12 @@ int main(int argc, char ** argv )
 	std::cout << "https://github.com/chipkin/BACnetServerExampleCPP" << std::endl << std::endl;
 
 
-	// Load the arguments. 
+	// Load the arguments
 	downstream_Device_ip_address = SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS; 
 	if (argc >= 2) {
 		downstream_Device_ip_address = argv[1];
 		std::cout << "FYI: Using " << downstream_Device_ip_address << " for the downstream device IP address" << std::endl;
 	}
-
-	
-
 
 
 	// 1. Load the CAS BACnet stack functions
@@ -152,7 +160,7 @@ int main(int argc, char ** argv )
 	std::cout << "OK, Connected to port" << std::endl;
 
 
-	// 3. Setup the callbacks. 
+	// 3. Setup the callbacks
 	// ---------------------------------------------------------------------------
 	std::cout << "FYI: Registering the callback Functions with the CAS BACnet Stack" << std::endl;
 
@@ -163,7 +171,7 @@ int main(int argc, char ** argv )
 	// System Time Callback Functions
 	fpRegisterCallbackGetSystemTime(CallbackGetSystemTime);
 
-	// non confirmed responses. 
+	// Non-confirmed responses 
 	fpRegisterHookIAm(HookIAm);
 	fpRegisterHookIHave(HookIHave);
 
@@ -189,7 +197,7 @@ int main(int argc, char ** argv )
 	fpRegisterHookPropertyTime(HookPropertyTime);
 	fpRegisterHookPropertyUInt(HookPropertyUInt);
 
-	// 4. Setup the BACnet device. 
+	// 4. Setup the BACnet device
 	// ---------------------------------------------------------------------------
 	std::cout << "Setting up client device. device.instance=[" << SETTING_CLIENT_DEVICE_INSTANCE << "]" << std::endl;
 
@@ -200,7 +208,7 @@ int main(int argc, char ** argv )
 	}
 	std::cout << "Created Device." << std::endl;
 
-	// Enable services supported by this device. 
+	// Enable services supported by this device 
 	fpSetServiceEnabled(SETTING_CLIENT_DEVICE_INSTANCE, CASBACnetStackExampleConstants::SERVICE_I_AM, true);
 	fpSetServiceEnabled(SETTING_CLIENT_DEVICE_INSTANCE, CASBACnetStackExampleConstants::SERVICE_I_HAVE, true);
 	fpSetServiceEnabled(SETTING_CLIENT_DEVICE_INSTANCE, CASBACnetStackExampleConstants::SERVICE_WHO_IS, true);
@@ -209,9 +217,9 @@ int main(int argc, char ** argv )
 	fpSetServiceEnabled(SETTING_CLIENT_DEVICE_INSTANCE, CASBACnetStackExampleConstants::SERVICE_WRITE_PROPERTY, true);
 	fpSetServiceEnabled(SETTING_CLIENT_DEVICE_INSTANCE, CASBACnetStackExampleConstants::SERVICE_WRITE_PROPERTY_MULTIPLE, true);
 
-
-	// 
+ 
 	// 5. Convert the IP Address and Port to a connection string
+	// ---------------------------------------------------------------------------
 	std::cout << "Generated the connection string for the downstream device. " << std::endl ;
 	if (!ChipkinCommon::ChipkinConvert::IPAddressToBytes(downstream_Device_ip_address.c_str(), downstreamConnectionString, 6)) {
 		std::cerr << "Failed to convert the ip address to a connection string" << std::endl ;
@@ -230,7 +238,7 @@ int main(int argc, char ** argv )
 
 		// Handle any user input.
 		if (!DoUserInput()) {
-			// User press 'q' to quit the example application.
+			// User press 'q' to quit the example application
 			break;
 		}
 		
@@ -373,25 +381,28 @@ void ExampleReadProperty() {
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_POSITIVE_INTEGER_VALUE, 48, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_TIME_VALUE, 50, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
 	
-	// send the Read property message. 
+	// Send the Read property message
 	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
 	WaitForResponse();
 }
 
 void ExampleWriteProperty() 
 {
+	// Get and read the value of AnalogValue
 	std::cout << "Sending Read Property. AnalogValue, INSTANCE=[2], property=[" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE << "], timeout=[3]..." << std::endl;
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
 	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
 
+	// Get and write to AnalogValue on server
 	std::cout << "Sending WriteProperty to the Present Value of Analog Value 2..." << std::endl;
 	fpBuildWriteProperty(4, "1.0", 3, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0, false, 16);
 	fpSendWriteProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
 
+	// Verify that AanalogValue has changed
 	std::cout << "Sending Read Property. AnalogValue, INSTANCE=[2], property=[" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE << "], timeout=[3]..." << std::endl;
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
 	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
@@ -517,7 +528,7 @@ time_t CallbackGetSystemTime()
 	return time(0) ;
 }
 
-
+// Outputs fetched data to console in readable format
 void HelperPrintCommonHookParameters(const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength) {
 	std::cout << "networkType=[" << (int)networkType << "], ";
 	std::cout << "connectionString=[" << (int)connectionString[0] << "." << (int)connectionString[1] << "." << (int)connectionString[2] << "." << (int)connectionString[3] << ":" << ((connectionString[4] * 256) + connectionString[5]) << "], "; 
