@@ -16,7 +16,7 @@
 
 #include "CASBACnetStackAdapter.h"
 #include "CASBACnetStackExampleConstants.h"
-#include "CIBuildVersion.h"
+#include "CIBuildSettings.h"
 
 // Helpers 
 #include "SimpleUDP.h"
@@ -61,7 +61,7 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.2";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.3";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
