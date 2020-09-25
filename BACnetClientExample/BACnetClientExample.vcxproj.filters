@@ -959,9 +959,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CIBuildVersion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SimpleUDP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1881,6 +1878,9 @@
       <Filter>CASBACnetStack\Helper</Filter>
     </ClInclude>
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\CASBACnetStackDLL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CIBuildSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
