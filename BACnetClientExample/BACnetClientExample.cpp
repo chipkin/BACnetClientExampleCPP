@@ -61,7 +61,7 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.3";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.4";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
@@ -70,7 +70,7 @@ const uint16_t SETTING_BACNET_IP_PORT = 47808;
 const uint32_t SETTING_CLIENT_DEVICE_INSTANCE = 389002; 
 const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
-const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.1.126";
+const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.2.217";
 
 // Downstream IP Initialization
 // =======================================
@@ -126,8 +126,8 @@ void ExampleWriteProperty();
 int main(int argc, char ** argv )
 {
 	// Print the application version information 
-	std::cout << "CAS BACnet Stack Server Example v" << APPLICATION_VERSION << "." << CIBUILDNUMBER << std::endl;
-	std::cout << "https://github.com/chipkin/BACnetServerExampleCPP" << std::endl << std::endl;
+	std::cout << "CAS BACnet Stack Client Example v" << APPLICATION_VERSION << "." << CIBUILDNUMBER << std::endl;
+	std::cout << "https://github.com/chipkin/BACnetClientExampleCPP" << std::endl << std::endl;
 
 
 	// Load the arguments

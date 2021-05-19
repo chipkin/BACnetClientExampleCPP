@@ -96,9 +96,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -114,9 +114,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -158,7 +158,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -193,6 +193,7 @@
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetAuthorizationExemption.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetAuthorizationMode.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetBackupState.cpp" />
+    <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetBDTEntry.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetBinaryLightingPV.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetBinaryPV.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetBusinessLogic.cpp" />
@@ -262,6 +263,7 @@
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetEventState.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetEventType.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetFaultType.cpp" />
+    <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetFDTEntry.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetFileAccessMethod.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetFirstFailedSubscription.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetForwardedNPDU.cpp" />
@@ -309,6 +311,7 @@
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetMaintenance.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetMSTPPacket.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkLayerProtocolMessage.cpp" />
+    <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkLayerVendorProprietaryMessage.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkNumberIs.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkNumberQuality.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkParameters.cpp" />
@@ -459,6 +462,7 @@
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\CASBACnetStackDLL.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\CErrorContainer.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\IRenderable.cpp" />
+    <ClCompile Include="..\submodules\cas-bacnet-stack\source\MSTP.c" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\source\XMLRenderer.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\submodules\cas-common\source\ChipkinConvert.cpp" />
     <ClCompile Include="..\submodules\cas-bacnet-stack\submodules\cas-common\source\ChipkinEndianness.cpp" />
@@ -489,6 +493,7 @@
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetAuthorizationExemption.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetAuthorizationMode.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetBackupState.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetBDTEntry.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetBinaryLightingPV.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetBinaryPV.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetBusinessLogic.h" />
@@ -558,6 +563,7 @@
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetEventState.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetEventType.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetFaultType.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetFDTEntry.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetFileAccessMethod.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetFirstFailedSubscription.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetForwardedNPDU.h" />
@@ -606,6 +612,7 @@
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetMaintenance.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetMSTPPacket.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkLayerProtocolMessage.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkLayerVendorProprietaryMessage.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkNumberIs.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkNumberQuality.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\BACnetNetworkParameters.h" />
@@ -763,18 +770,26 @@
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\CASBACnetStackOptions.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\CErrorContainer.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\ChipkinRenderer.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\CIBuildSettings.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\datatypes.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\endianness.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\ICodable.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\IRenderable.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\licensee.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\MSTP.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\source\stdafx.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\version.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\source\XMLRenderer.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\submodules\cas-common\source\ChipkinConvert.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\submodules\cas-common\source\ChipkinEndianness.h" />
     <ClInclude Include="..\submodules\cas-bacnet-stack\submodules\cas-common\source\ChipkinUtilities.h" />
+    <ClInclude Include="..\submodules\cas-bacnet-stack\submodules\xml2json\include\xml2json.hpp" />
     <ClInclude Include="CASBACnetStackExampleConstants.h" />
     <ClInclude Include="CIBuildSettings.h" />
     <ClInclude Include="SimpleUDP.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\submodules\cas-bacnet-stack\source\readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
