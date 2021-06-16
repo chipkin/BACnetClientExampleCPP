@@ -61,7 +61,7 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.4";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.5";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
@@ -70,7 +70,7 @@ const uint16_t SETTING_BACNET_IP_PORT = 47808;
 const uint32_t SETTING_CLIENT_DEVICE_INSTANCE = 389002; 
 const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
-const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.2.217";
+const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.4.102";
 
 // Downstream IP Initialization
 // =======================================
@@ -122,6 +122,7 @@ void HelperPrintCommonHookPropertyParameters(const uint32_t originalInvokeId, co
 void ExampleWhoIs();
 void ExampleReadProperty(); 
 void ExampleWriteProperty();
+void ExampleSubscribeCOV();
 
 int main(int argc, char ** argv )
 {
@@ -279,6 +280,10 @@ bool DoUserInput()
 			ExampleWriteProperty();
 			break; 
 		}
+		case 'c': {
+			ExampleSubscribeCOV();
+			break;
+		}
 		default: {
 			// Print the Help
 			std::cout << std::endl << std::endl;
@@ -293,6 +298,7 @@ bool DoUserInput()
 			std::cout << "- W - Send WhoIs message" << std::endl;
 			std::cout << "- R - Send Read property messages" << std::endl;
 			std::cout << "- U - Send Write property messages" << std::endl;
+			std::cout << "- C - Send Subscribe COV Request" << std::endl;
 			std::cout << std::endl;
 			break;
 		}
@@ -406,6 +412,26 @@ void ExampleWriteProperty()
 	std::cout << "Sending Read Property. AnalogValue, INSTANCE=[2], property=[" << CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE << "], timeout=[3]..." << std::endl;
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0);
 	fpSendReadProperty(&invokeId, downstreamConnectionString, 6, 0, 0, NULL, 0);
+
+	WaitForResponse();
+}
+
+void ExampleSubscribeCOV() {
+	const uint16_t timeToLive = 60 * 5; // 5 Min subscription time 
+	
+	// Local process identifier, must be unique for each subscribe COV request
+	const uint16_t analogValueProcessIdentifier = 0; 
+	const uint16_t analogInputProcessIdentifier = 1; 
+
+	// Subscribe to the analog input and analog value objects in the server example
+
+	std::cout << "Sending Subscribe COV Request. Analog Input, INSTANCE=[0] ...";
+	fpSendSubscribeCOV(&invokeId, analogInputProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT, 0, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
+
+	WaitForResponse();
+
+	std::cout << "Sending Subscribe COV Request. Analog Value, INSTANCE=[2] ...";
+	fpSendSubscribeCOV(&invokeId, analogValueProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
 }

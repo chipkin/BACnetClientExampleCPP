@@ -23,6 +23,7 @@ Help:
 - W - Send WhoIs message
 - R - Send Read property messages
 - U - Send Write property messages
+- C - Send Subscribe COV Request
 ```
 Client expects a device with the following objects:
 

@@ -2,6 +2,10 @@
 
 ## Version 0.0.x
 
+### 0.0.5 (2021-Jun-16)
+
+- Added subscribe COV request example service
+
 ### 0.0.4 (2021-May-19)
 
 - Updated to CAS BACnet Stack version 3.22.3
