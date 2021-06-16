@@ -70,7 +70,7 @@ const uint16_t SETTING_BACNET_IP_PORT = 47808;
 const uint32_t SETTING_CLIENT_DEVICE_INSTANCE = 389002; 
 const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
-const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.4.102";
+const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.2.217";
 
 // Downstream IP Initialization
 // =======================================
@@ -425,12 +425,12 @@ void ExampleSubscribeCOV() {
 
 	// Subscribe to the analog input and analog value objects in the server example
 
-	std::cout << "Sending Subscribe COV Request. Analog Input, INSTANCE=[0] ...";
+	std::cout << "Sending Subscribe COV Request. Analog Input, INSTANCE=[0], timeToLive = " << timeToLive << ", processIdentifier = " << analogValueProcessIdentifier << std::endl;
 	fpSendSubscribeCOV(&invokeId, analogInputProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT, 0, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
 
-	std::cout << "Sending Subscribe COV Request. Analog Value, INSTANCE=[2] ...";
+	std::cout << "Sending Subscribe COV Request. Analog Value, INSTANCE=[2], timeToLive = " << timeToLive << ", processIdentifier = " << analogInputProcessIdentifier << std::endl;
 	fpSendSubscribeCOV(&invokeId, analogValueProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
