@@ -2,6 +2,10 @@
 
 ## Version 0.0.x
 
+### 0.0.6 (2021-Jul-15)
+
+- Added confirmed text message request example service
+
 ### 0.0.5 (2021-Jun-16)
 
 - Added subscribe COV request example service

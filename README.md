@@ -24,6 +24,7 @@ Help:
 - R - Send Read property messages
 - U - Send Write property messages
 - C - Send Subscribe COV Request
+- T - Send Confirmed Text Message Request
 ```
 Client expects a device with the following objects:
 
