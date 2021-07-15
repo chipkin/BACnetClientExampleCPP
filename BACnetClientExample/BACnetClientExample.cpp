@@ -112,6 +112,9 @@ void HookPropertyReal(const uint32_t originalInvokeId, const uint8_t service, co
 void HookPropertyTime(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint8_t hour, const uint8_t minute, const uint8_t second, const uint8_t hundrethSecond, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength);
 void HookPropertyUInt(const uint32_t originalInvokeId, const uint8_t service, const uint16_t objectType, const uint32_t objectInstance, const uint32_t propertyIdentifier, const bool usePropertyArrayIndex, const uint32_t propertyArrayIndex, const uint32_t value, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t network, const uint8_t* sourceAddress, const uint8_t sourceAddressLength);
 
+// Hooks for device management
+bool HookTextMessage(const uint32_t sourceDeviceIdentifier, const bool useMessageClass, const uint32_t messageClassUnsigned, const char* messageClassString, const uint32_t messageClassStringLength, const uint8_t messagePriority, const char* message, const uint32_t messageLength, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t sourceNetwork, const uint8_t* sourceAddress, const uint8_t sourceAddressLength, uint16_t* errorClass, uint16_t* errorCode);
+
 // Helper functions 
 bool DoUserInput();
 void WaitForResponse(unsigned int timeout=3); 
@@ -123,6 +126,7 @@ void ExampleWhoIs();
 void ExampleReadProperty(); 
 void ExampleWriteProperty();
 void ExampleSubscribeCOV();
+void ExampleConfirmedTextMessage();
 
 int main(int argc, char ** argv )
 {
@@ -197,6 +201,9 @@ int main(int argc, char ** argv )
 	fpRegisterHookPropertyReal(HookPropertyReal);
 	fpRegisterHookPropertyTime(HookPropertyTime);
 	fpRegisterHookPropertyUInt(HookPropertyUInt);
+
+	// Hooks for device management
+	fpRegisterHookTextMessage(HookTextMessage);
 
 	// 4. Setup the BACnet device
 	// ---------------------------------------------------------------------------
@@ -284,6 +291,10 @@ bool DoUserInput()
 			ExampleSubscribeCOV();
 			break;
 		}
+		case 't': {
+			ExampleConfirmedTextMessage();
+			break;
+		}
 		default: {
 			// Print the Help
 			std::cout << std::endl << std::endl;
@@ -299,6 +310,7 @@ bool DoUserInput()
 			std::cout << "- R - Send Read property messages" << std::endl;
 			std::cout << "- U - Send Write property messages" << std::endl;
 			std::cout << "- C - Send Subscribe COV Request" << std::endl;
+			std::cout << "- T - Send Confirmed Text Message Request" << std::endl;
 			std::cout << std::endl;
 			break;
 		}
@@ -432,6 +444,22 @@ void ExampleSubscribeCOV() {
 
 	std::cout << "Sending Subscribe COV Request. Analog Value, INSTANCE=[2], timeToLive = " << timeToLive << ", processIdentifier = " << analogInputProcessIdentifier << std::endl;
 	fpSendSubscribeCOV(&invokeId, analogValueProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
+
+	WaitForResponse();
+}
+
+void ExampleConfirmedTextMessage() {
+	// Text message settings
+	bool useMessageClass = true; // Enable or disable message class property
+	uint32_t messageClassUnsigned = 5;
+	char messageClassString[] = "";
+	uint8_t messagePriority = 0; // 0 = normal, 1 = urgent
+	char message[] = "Hello from the C++ client example";
+
+	// Send confirmed text message request
+	// C++ server example configured to handle and send response (+) with default settings
+	std::cout << "Sending Confirmed Text Message";
+	fpSendConfirmedTextMessage(&invokeId, SETTING_CLIENT_DEVICE_INSTANCE, useMessageClass, messageClassUnsigned, messageClassString, strlen(messageClassString), messagePriority, message, strlen(message), downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
 }
@@ -896,3 +924,16 @@ void HookPropertyUInt(const uint32_t originalInvokeId, const uint8_t service, co
 	HelperPrintCommonHookParameters(connectionString, connectionStringLength, networkType, network, sourceAddress, sourceAddressLength);
 	std::cout << std::endl;
 }
+
+bool HookTextMessage(const uint32_t sourceDeviceIdentifier, const bool useMessageClass, const uint32_t messageClassUnsigned, const char* messageClassString, const uint32_t messageClassStringLength, const uint8_t messagePriority, const char* message, const uint32_t messageLength, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, const uint16_t sourceNetwork, const uint8_t* sourceAddress, const uint8_t sourceAddressLength, uint16_t* errorClass, uint16_t* errorCode) {
+	// Used to read text messages
+	std::cout << "HookTextMessage. sourceDeviceIdentifier=[" << sourceDeviceIdentifier << "], useMessageClass=[" << useMessageClass << "], messageClassString=[" << messageClassString << "], messageClassStringLength=[" << messageClassStringLength << "], messagePriority=[" << messagePriority << "], message=[" << message << "], messageLength=[" << messageLength << "], ";
+	std::cout << "networkType=[" << (int)networkType << "], ";
+	std::cout << "connectionString=[" << (int)connectionString[0] << "." << (int)connectionString[1] << "." << (int)connectionString[2] << "." << (int)connectionString[3] << ":" << ((connectionString[4] * 256) + connectionString[5]) << "], ";
+
+	// Errors and return value unused for unconfirmed service requests
+	*errorClass = 0;
+	*errorCode = 0;
+	return true;
+}
+
