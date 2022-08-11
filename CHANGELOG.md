@@ -2,6 +2,10 @@
 
 ## Version 0.0.x
 
+### 0.0.7 (2022-Aug-11)
+
+- Updated to CAS BACnet Stack version 4.1.5
+
 ### 0.0.6 (2021-Jul-15)
 
 - Added confirmed text message request example service

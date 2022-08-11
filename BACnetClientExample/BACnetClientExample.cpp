@@ -61,7 +61,7 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.6";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.7";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
@@ -509,7 +509,7 @@ uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLengt
 
 		// Process the message as XML
 		static char xmlRenderBuffer[MAX_XML_RENDER_BUFFER_LENGTH];
-		if (fpDecodeAsXML((char*)message, bytesRead, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH) > 0) {
+		if (fpDecodeAsXML((char*)message, bytesRead, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH, CASBACnetStackExampleConstants::NETWORK_TYPE_IP) > 0) {
 			std::cout << xmlRenderBuffer << std::endl << std::endl;
 			memset(xmlRenderBuffer, 0, MAX_XML_RENDER_BUFFER_LENGTH);
 
@@ -568,7 +568,7 @@ uint16_t CallbackSendMessage(const uint8_t* message, const uint16_t messageLengt
 
 	// Get the XML rendered version of the just sent message
 	static char xmlRenderBuffer[MAX_XML_RENDER_BUFFER_LENGTH];
-	if (fpDecodeAsXML((char*)message, messageLength, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH) > 0) {
+	if (fpDecodeAsXML((char*)message, messageLength, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH, networkType) > 0) {
 		std::cout << xmlRenderBuffer << std::endl << std::endl;
 		memset(xmlRenderBuffer, 0, MAX_XML_RENDER_BUFFER_LENGTH);
 	}

@@ -2,6 +2,10 @@
 
 A basic BACnet IP client example written in C++ using the [CAS BACnet Stack](https://store.chipkin.com/services/stacks/bacnet-stack). This client example is meant to be used with the [BACnet IP server example](https://github.com/chipkin/BACnetServerExampleCPP). Supports WhoIs, Read property, and Write property services.
 
+## Supported CAS BACnet Stack Version
+
+This example project uses version 4.1.5 of the CAS BACnet Stack
+
 ## Releases
 
 Build versions of this example can be downloaded from the releases page:
