@@ -2,6 +2,13 @@
 
 ## Version 0.0.x
 
+### 0.0.8 (2023-Sep-29)
+
+- Updated preprocessor macro to include ENABLE_DATA_LINK_LAYER_IPV4
+- Updated Windows SDK version [Issues/35](https://github.com/chipkin/BACnetServerExampleCPP/issues/35)
+- Updated the project files for the CASBACnetStack to the latest version [Issues/37](https://github.com/chipkin/BACnetServerExampleCPP/issues/37)
+- Tested using BACnetStack version 4.1.19.0
+
 ### 0.0.7 (2022-Aug-11)
 
 - Updated to CAS BACnet Stack version 4.1.5
