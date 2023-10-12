@@ -96,7 +96,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;ENABLE_DATA_LINK_LAYER_IPV4</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;ENABLE_DATA_LINK_LAYER_IPV4;ENABLE_STRING_LITERALS
+;ENABLE_DECODE_AS_JSON
+;ENABLE_DECODE_AS_XML
+;ENABLE_BACNET_API_DEBUG_LOGGING
+;ENABLE_ALL_OBJECT_TYPES
+;ENABLE_ALL_BIBBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -114,7 +119,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;ENABLE_DATA_LINK_LAYER_IPV4</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;ENABLE_DATA_LINK_LAYER_IPV4;ENABLE_STRING_LITERALS
+;ENABLE_DECODE_AS_JSON
+;ENABLE_DECODE_AS_XML
+;ENABLE_BACNET_API_DEBUG_LOGGING
+;ENABLE_ALL_OBJECT_TYPES
+;ENABLE_ALL_BIBBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -134,7 +144,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB;ENABLE_DATA_LINK_LAYER_IPV4</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB;ENABLE_DATA_LINK_LAYER_IPV4;ENABLE_STRING_LITERALS
+;ENABLE_DECODE_AS_JSON
+;ENABLE_DECODE_AS_XML
+;ENABLE_BACNET_API_DEBUG_LOGGING
+;ENABLE_ALL_OBJECT_TYPES
+;ENABLE_ALL_BIBBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -156,7 +171,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB;ENABLE_DATA_LINK_LAYER_IPV4</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;CAS_BACNET_STACK_LIB_TYPE_LIB;ENABLE_DATA_LINK_LAYER_IPV4;ENABLE_STRING_LITERALS
+;ENABLE_DECODE_AS_JSON
+;ENABLE_DECODE_AS_XML
+;ENABLE_BACNET_API_DEBUG_LOGGING
+;ENABLE_ALL_OBJECT_TYPES
+;ENABLE_ALL_BIBBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\cas-common\source;$(SolutionDir)..\submodules\cas-bacnet-stack\source;$(SolutionDir)..\submodules\cas-bacnet-stack\adapters\cpp;$(SolutionDir)..\bin\;$(SolutionDir)..\submodules\cas-bacnet-stack\submodules\xml2json\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

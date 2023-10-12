@@ -2,6 +2,12 @@
 
 ## Version 0.0.x
 
+### 0.0.9 (2023-Oct-12)
+
+- Updated preprocessor macro to include ENABLE_STRING_LITERALS, ENABLE_DECODE_AS_JSON, ENABLE_DECODE_AS_XML, ENABLE_BACNET_API_DEBUG_LOGGING, ENABLE_ALL_OBJECT_TYPES, ENABLE_ALL_BIBBS
+- Updated ReadProperty to read for device instance 389999, which is the instance for the device programmed in the BACnetServerExampleCPP project
+- Tested using BACnetStack version 4.1.19.0
+
 ### 0.0.8 (2023-Sep-29)
 
 - Updated preprocessor macro to include ENABLE_DATA_LINK_LAYER_IPV4
