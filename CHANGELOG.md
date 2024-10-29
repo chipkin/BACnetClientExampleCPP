@@ -1,5 +1,11 @@
 # Change Log
 
+## Version 1.0.x
+
+### 1.0.0 (2024-Oct-29)
+
+- Updated example to use with BACnetStack version 5.1.2.0
+
 ## Version 0.0.x
 
 ### 0.0.9 (2023-Oct-12)
