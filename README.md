@@ -4,7 +4,7 @@ A basic BACnet IP client example written in C++ using the [CAS BACnet Stack](htt
 
 ## Supported CAS BACnet Stack Version
 
-This example project uses version 4.1.5 of the CAS BACnet Stack
+This example project uses version 5.1.2 of the CAS BACnet Stack
 
 ## Releases
 

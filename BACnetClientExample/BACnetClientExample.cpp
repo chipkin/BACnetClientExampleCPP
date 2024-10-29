@@ -79,7 +79,7 @@ std::string downstream_Device_ip_address;
 
 // Callback Functions to Register to the DLL
 // Message Functions
-uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLength, uint8_t* receivedConnectionString, const uint8_t maxConnectionStringLength, uint8_t* receivedConnectionStringLength, uint8_t* networkType);
+uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLength, uint8_t* sourceConnectionString, uint8_t* sourceConnectionStringLength, uint8_t* destinationConnectionString, uint8_t* destinationConnectionStringLength, const uint8_t maxConnectionStringLength, uint8_t* networkType);
 uint16_t CallbackSendMessage(const uint8_t* message, const uint16_t messageLength, const uint8_t* connectionString, const uint8_t connectionStringLength, const uint8_t networkType, bool broadcast);
 
 // System Functions
@@ -126,6 +126,7 @@ void ExampleWhoIs();
 void ExampleReadProperty(); 
 void ExampleWriteProperty();
 void ExampleSubscribeCOV();
+void ExampleSubscribeCOVProperty();
 void ExampleConfirmedTextMessage();
 
 int main(int argc, char ** argv )
@@ -242,7 +243,7 @@ int main(int argc, char ** argv )
 	std::cout << "FYI: Entering main loop..." << std::endl;
 	for (;;) {
 		// Call the DLLs loop function which checks for messages and processes them.
-		fpLoop();
+		fpTick();
 
 		// Handle any user input.
 		if (!DoUserInput()) {
@@ -291,6 +292,10 @@ bool DoUserInput()
 			ExampleSubscribeCOV();
 			break;
 		}
+		case 'p': {
+			ExampleSubscribeCOVProperty();
+			break;
+		}
 		case 't': {
 			ExampleConfirmedTextMessage();
 			break;
@@ -325,7 +330,7 @@ bool DoUserInput()
 void WaitForResponse(unsigned int timeout /*=3*/) {
 	time_t expireTime = time(0) + timeout;
 	while (time(0) < expireTime) {
-		fpLoop();
+		fpTick();
 	}
 }
 
@@ -437,7 +442,7 @@ void ExampleSubscribeCOV() {
 
 	// Subscribe to the analog input and analog value objects in the server example
 
-	std::cout << "Sending Subscribe COV Request. Analog Input, INSTANCE=[0], timeToLive = " << timeToLive << ", processIdentifier = " << analogValueProcessIdentifier << std::endl;
+	std::cout << "Sending Subscribe COV Request. Analog Input, INSTANCE=[0], timeToLive = " << timeToLive << ", processIdentifier = " << analogInputProcessIdentifier << std::endl;
 	fpSendSubscribeCOV(&invokeId, analogInputProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_INPUT, 0, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
@@ -446,6 +451,18 @@ void ExampleSubscribeCOV() {
 	fpSendSubscribeCOV(&invokeId, analogValueProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
+}
+
+void ExampleSubscribeCOVProperty() {
+	const uint16_t timeToLive = 60 * 5; // 5 Min subscription time 
+
+	// Local process identifier, must be unique for each subscribe COV request
+	const uint16_t analogValueProcessIdentifier = 0;
+
+	// Subscribe to the analog input and analog value objects in the server example
+
+	std::cout << "Sending Subscribe COV Property Request. Analog Value, INSTANCE=[2], timeToLive = " << timeToLive << ", processIdentifier = " << analogValueProcessIdentifier << std::endl;
+	fpSendSubscribeCOVProperty(&invokeId, analogValueProcessIdentifier, CASBACnetStackExampleConstants::OBJECT_TYPE_ANALOG_VALUE, 2, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_PRESENT_VALUE, false, 0, true, 5.0f, false, timeToLive, downstreamConnectionString, 6, 0, 0, NULL, 0);
 }
 
 void ExampleConfirmedTextMessage() {
@@ -471,14 +488,14 @@ void ExampleConfirmedTextMessage() {
 
 
 // Callback used by the BACnet Stack to check if there is a message to process
-uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLength, uint8_t* receivedConnectionString, const uint8_t maxConnectionStringLength, uint8_t* receivedConnectionStringLength, uint8_t* networkType)
+uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLength, uint8_t* sourceConnectionString, uint8_t* sourceConnectionStringLength, uint8_t* destinationConnectionString, uint8_t* destinationConnectionStringLength, const uint8_t maxConnectionStringLength, uint8_t* networkType)
 {
 	// Check parameters
 	if (message == NULL || maxMessageLength == 0) {
 		std::cerr << "Invalid input buffer" << std::endl;
 		return 0;
 	}
-	if (receivedConnectionString == NULL || maxConnectionStringLength == 0) {
+	if (sourceConnectionString == NULL || maxConnectionStringLength == 0) {
 		std::cerr << "Invalid connection string buffer" << std::endl;
 		return 0;
 	}
@@ -497,14 +514,14 @@ uint16_t CallbackReceiveMessage(uint8_t* message, const uint16_t maxMessageLengt
 		std::cout << "FYI: Received message from [" << ipAddress << ":" << port << "], length [" << bytesRead << "]" << std::endl;
 
 		// Convert the IP Address to the connection string
-		if (!ChipkinCommon::ChipkinConvert::IPAddressToBytes(ipAddress, receivedConnectionString, maxConnectionStringLength)) {
+		if (!ChipkinCommon::ChipkinConvert::IPAddressToBytes(ipAddress, sourceConnectionString, maxConnectionStringLength)) {
 			std::cerr << "Failed to convert the ip address into a connectionString" << std::endl;
 			return 0;
 		}
-		receivedConnectionString[4] = port / 256;
-		receivedConnectionString[5] = port % 256;
+		sourceConnectionString[4] = port / 256;
+		sourceConnectionString[5] = port % 256;
 
-		*receivedConnectionStringLength = 6;
+		*sourceConnectionStringLength = 6;
 		*networkType = CASBACnetStackExampleConstants::NETWORK_TYPE_IP;
 
 		// Process the message as XML
@@ -568,7 +585,7 @@ uint16_t CallbackSendMessage(const uint8_t* message, const uint16_t messageLengt
 
 	// Get the XML rendered version of the just sent message
 	static char xmlRenderBuffer[MAX_XML_RENDER_BUFFER_LENGTH];
-	if (fpDecodeAsXML((char*)message, messageLength, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH, networkType) > 0) {
+	if (fpDecodeAsXML((char*)message, messageLength, xmlRenderBuffer, MAX_XML_RENDER_BUFFER_LENGTH, CASBACnetStackExampleConstants::NETWORK_TYPE_IP) > 0) {
 		std::cout << xmlRenderBuffer << std::endl << std::endl;
 		memset(xmlRenderBuffer, 0, MAX_XML_RENDER_BUFFER_LENGTH);
 	}
