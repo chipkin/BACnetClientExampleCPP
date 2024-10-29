@@ -61,7 +61,7 @@ uint8_t invokeId;
 
 // Constants
 // =======================================
-const std::string APPLICATION_VERSION = "0.0.8";  // See CHANGELOG.md for a full list of changes.
+const std::string APPLICATION_VERSION = "0.0.9";  // See CHANGELOG.md for a full list of changes.
 const uint32_t MAX_XML_RENDER_BUFFER_LENGTH = 1024 * 20;
 
 // Settings 
@@ -365,7 +365,7 @@ void ExampleReadProperty() {
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_INPUT, 3, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_OUTPUT, 4, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_BINARY_VALUE, 5, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
-	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE, 8, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
+	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_DEVICE, 389999, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_INPUT, 13, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_OUTPUT, 14, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
 	fpBuildReadProperty(CASBACnetStackExampleConstants::OBJECT_TYPE_MULTI_STATE_VALUE, 19, CASBACnetStackExampleConstants::PROPERTY_IDENTIFIER_OBJECT_NAME, false, 0);
