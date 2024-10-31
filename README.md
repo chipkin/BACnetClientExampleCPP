@@ -1,10 +1,11 @@
 # BACnet Client Example C++
 
 A basic BACnet IP client example written in C++ using the [CAS BACnet Stack](https://store.chipkin.com/services/stacks/bacnet-stack). This client example is meant to be used with the [BACnet IP server example](https://github.com/chipkin/BACnetServerExampleCPP). Supports WhoIs, Read property, and Write property services.
+This example shows how to use some of the BACnet client functionality of the CAS BACnet Stack and can be used to test communications with the BACnetServerExampleCPP.
 
 ## Supported CAS BACnet Stack Version
 
-This example project uses version 4.1.5 of the CAS BACnet Stack
+This example project uses version 5.1.2 of the CAS BACnet Stack
 
 ## Releases
 
@@ -14,21 +15,29 @@ Build versions of this example can be downloaded from the releases page:
 
 ## Installation
 
-Download the latest release zip file on the releases page.
+Download the latest release executable on the releases page.
 
 ## Usage
+
+The target device for testing with this Client example application is the [BACnetServerExampleCPP](https://github.com/chipkin/BACnetServerExampleCPP)
 
 ```txt
 Usage: BACnetClient {IPAddress}
 Example: BACnetClient 192.168.1.126
 
 Help:
-- Q - Quit
 - W - Send WhoIs message
-- R - Send Read property messages
-- U - Send Write property messages
-- C - Send Subscribe COV Request
-- T - Send Confirmed Text Message Request
+- R - Send ReadProperty messages
+- U - Send WriteProperty messages
+- S - Send SubscribeCOV Request
+- P - Send SubscribeCOVProperty Request
+- M - Send ConfirmedTextMessage Request
+- T - Send TimeSynchronization Request
+- R - Send ReinitializedDevice Request
+- D - Send DeviceCommunicationControl Request to Disable
+- E - Send DeviceCommunicationControl Request to Enable
+- H - Display Help information
+- Q - Quit
 ```
 Client expects a device with the following objects:
 
@@ -55,17 +64,19 @@ Client expects a device with the following objects:
 
 ## Build
 
-A [Visual studio 2019](https://visualstudio.microsoft.com/downloads/) project is included with this project. This project also auto built using [Gitlab CI](https://docs.gitlab.com/ee/ci/) on every commit.
+A [Visual studio 2022](https://visualstudio.microsoft.com/downloads/) project is included with this project. 
 
-The CAS BACnet Stack submodule is required for compilation.
+The CAS BACnet Stack submodule is required for compilation. Please contact Chipkin Automation Systems to purchase the CAS BACnet Stack.
+
+More information about the CAS BACnet Stack can be found here: [CAS BACnet Stack](https://store.chipkin.com/services/stacks/bacnet-stack)
 
 ## Example Output
 ```txt
-CAS BACnet Stack Server Example v0.0.2.0
-https://github.com/chipkin/BACnetServerExampleCPP
+CAS BACnet Stack Client Example v1.0.0.0
+https://github.com/chipkin/BACnetClientExampleCPP
 
 FYI: Loading CAS BACnet Stack functions... OK
-FYI: CAS BACnet Stack version: 3.16.0.0
+FYI: CAS BACnet Stack version: 5.1.2.0
 FYI: Connecting UDP Resource to port=[47808]... OK, Connected to port
 FYI: Registering the callback Functions with the CAS BACnet Stack
 Setting up client device. device.instance=[389002]
