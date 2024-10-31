@@ -166,6 +166,16 @@ public:
 	static const uint32_t DATA_TYPE_DATE = 10;
 	static const uint32_t DATA_TYPE_TIME = 11;
 	static const uint32_t DATA_TYPE_BACNET_OBJECT_IDENTIFIER = 12;
+
+	// Reinitialzed States (Used for ReinitializeDevice)
+	static const uint8_t REINITIALIZED_STATE_COLDSTART = 0;
+	static const uint8_t REINITIALIZED_STATE_WARMSTART = 1;
+	static const uint8_t REINITIALIZED_STATE_ACTIVATE_CHANGES = 7;
+
+	// Enable/Disable Enumerations  (Used for DeviceCommunicationControl)
+	static const uint8_t ENABLEDISABLE_ENABLE = 0;
+	static const uint8_t ENABLEDISABLE_DISABLE = 1;
+	static const uint8_t ENABLEDISABLE_DISABLE_INITIATION = 2;
 };
 
 #endif // __CASBACnetStackExampleConstants_h__

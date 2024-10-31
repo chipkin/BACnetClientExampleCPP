@@ -71,6 +71,7 @@ const uint32_t SETTING_CLIENT_DEVICE_INSTANCE = 389002;
 const uint16_t SETTING_DOWNSTREAM_DEVICE_PORT = SETTING_BACNET_IP_PORT;
 const uint32_t SETTING_DOWNSTREAM_DEVICE_INSTANCE = 389999; 
 const std::string SETTING_DEFAULT_DOWNSTREAM_DEVICE_IP_ADDRESS = "192.168.2.217";
+const std::string SETTING_DEFAULT_DEVICE_PASSWORD = "12345";
 
 // Downstream IP Initialization
 // =======================================
@@ -128,6 +129,9 @@ void ExampleWriteProperty();
 void ExampleSubscribeCOV();
 void ExampleSubscribeCOVProperty();
 void ExampleConfirmedTextMessage();
+void ExampleTimeSynchronizationMessage();
+void ExampleReinitializeDevice();
+void ExampleDeviceCommunicationControl(bool enable);
 
 int main(int argc, char ** argv )
 {
@@ -288,7 +292,7 @@ bool DoUserInput()
 			ExampleWriteProperty();
 			break; 
 		}
-		case 'c': {
+		case 's': {
 			ExampleSubscribeCOV();
 			break;
 		}
@@ -296,10 +300,27 @@ bool DoUserInput()
 			ExampleSubscribeCOVProperty();
 			break;
 		}
-		case 't': {
+		case 'm': {
 			ExampleConfirmedTextMessage();
 			break;
 		}
+		case 't': {
+			ExampleTimeSynchronizationMessage();
+			break;
+		}
+		case 'i': {
+			ExampleReinitializeDevice();
+			break;
+		}
+		case 'd': {
+			ExampleDeviceCommunicationControl(false);
+			break;
+		}
+		case 'e': {
+			ExampleDeviceCommunicationControl(true);
+			break;
+		}
+		case 'h':
 		default: {
 			// Print the Help
 			std::cout << std::endl << std::endl;
@@ -310,12 +331,18 @@ bool DoUserInput()
 			std::cout << "Example: BACnetClient 192.168.1.126" << std::endl << std::endl;
 
 			std::cout << "Help: " << std::endl;
-			std::cout << "- Q - Quit" << std::endl;
 			std::cout << "- W - Send WhoIs message" << std::endl;
-			std::cout << "- R - Send Read property messages" << std::endl;
-			std::cout << "- U - Send Write property messages" << std::endl;
-			std::cout << "- C - Send Subscribe COV Request" << std::endl;
-			std::cout << "- T - Send Confirmed Text Message Request" << std::endl;
+			std::cout << "- R - Send ReadProperty messages" << std::endl;
+			std::cout << "- U - Send WriteProperty messages" << std::endl;
+			std::cout << "- S - Send SubscribeCOV Request" << std::endl;
+			std::cout << "- P - Send SubscribeCOVProperty Request" << std::endl;
+			std::cout << "- M - Send ConfirmedTextMessage Request" << std::endl;
+			std::cout << "- T - Send TimeSynchronization Request" << std::endl;
+			std::cout << "- R - Send ReinitializedDevice Request" << std::endl;
+			std::cout << "- D - Send DeviceCommunicationControl Request to Disable" << std::endl;
+			std::cout << "- E - Send DeviceCommunicationControl Request to Enable" << std::endl;
+			std::cout << "- H - Display Help information" << std::endl;
+			std::cout << "- Q - Quit" << std::endl;
 			std::cout << std::endl;
 			break;
 		}
@@ -479,6 +506,59 @@ void ExampleConfirmedTextMessage() {
 	fpSendConfirmedTextMessage(&invokeId, SETTING_CLIENT_DEVICE_INSTANCE, useMessageClass, messageClassUnsigned, messageClassString, strlen(messageClassString), messagePriority, message, strlen(message), downstreamConnectionString, 6, 0, 0, NULL, 0);
 
 	WaitForResponse();
+}
+
+void ExampleTimeSynchronizationMessage() {
+	// Time Synchronization Settings
+	uint8_t year = 2024 - 1900;
+	uint8_t month = 8;
+	uint8_t day = 15;
+	uint8_t weekday = 3;
+	uint8_t hour = 8;
+	uint8_t minute = 8;
+	uint8_t seconds = 8;
+	uint8_t hundrethSeconds = 0;
+
+	// Send TimeSynchronization request
+	// C++ server example configured to handle
+	std::cout << "Sending TimeSynchronization Message";
+	fpSendTimeSynchronization(year, month, day, weekday, hour, minute, seconds, hundrethSeconds, downstreamConnectionString, 6, 0, false, 0, NULL, 0);
+
+	WaitForResponse();	
+	// Note: TimeSynchronization is an unconfirmed request, which means the downstream device will not response.
+	// The WaitForResponse is called here just to wait for some cycles before continuing.
+
+	// Send UtcTimeSynchronization request
+	// C++ server example configured to handle
+	std::cout << "Sending UTCTimeSynchronization Message";
+	fpSendUTCTimeSynchronization(year, month, day, weekday, hour, minute, seconds, hundrethSeconds, downstreamConnectionString, 6, 0, false, 0, NULL, 0);
+
+	WaitForResponse();
+}
+
+void ExampleReinitializeDevice() {
+	// ReinitializeDevice Settings
+	uint8_t reinitializedState = CASBACnetStackExampleConstants::REINITIALIZED_STATE_ACTIVATE_CHANGES;
+
+	// Send ReinitializeDevice request
+	// C++ server example configured to handle
+	std::cout << "Sending ReinitializeDevice Message to activate changes";
+	fpSendReinitializeDevice(&invokeId, reinitializedState, SETTING_DEFAULT_DEVICE_PASSWORD.c_str(), SETTING_DEFAULT_DEVICE_PASSWORD.length(), downstreamConnectionString, 6, 0, 0, NULL, 0);
+}
+
+void ExampleDeviceCommunicationControl(bool enable) {
+	if (enable) {
+		// Send DeviceCommunicationControl request
+		// C++ server example configured to handle
+		std::cout << "Sending DeviceCommunicationControl Message to enable BACnet communication";
+		fpSendDeviceCommunicationControl(&invokeId, CASBACnetStackExampleConstants::ENABLEDISABLE_ENABLE, false, 0, SETTING_DEFAULT_DEVICE_PASSWORD.c_str(), SETTING_DEFAULT_DEVICE_PASSWORD.length(), downstreamConnectionString, 6, 0, 0, NULL, 0);
+	}
+	else {
+		// Send DeviceCommunicationControl request
+		// C++ server example configured to handle
+		std::cout << "Sending DeviceCommunicationControl Message to disable BACnet communication";
+		fpSendDeviceCommunicationControl(&invokeId, CASBACnetStackExampleConstants::ENABLEDISABLE_DISABLE, false, 0, SETTING_DEFAULT_DEVICE_PASSWORD.c_str(), SETTING_DEFAULT_DEVICE_PASSWORD.length(), downstreamConnectionString, 6, 0, 0, NULL, 0);
+	}
 }
 
 

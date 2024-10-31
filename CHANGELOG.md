@@ -5,6 +5,9 @@
 ### 1.0.0 (2024-Oct-29)
 
 - Updated example to use with BACnetStack version 5.1.2.0
+- Added TimeSynchronization example
+- Added ReinitializeDevice example
+- Added DeviceCommunicationControl example
 
 ## Version 0.0.x
 
